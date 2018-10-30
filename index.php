@@ -11,6 +11,46 @@ $result = $conn->query($sql);
 //afisat echo din else, daca sunt rezultate incepe bucla de while
 ?>
 
+<?php
+// functie care initializeaza butonul de submit din formular
+
+if(isset($_GET['inserare'])) {
+
+    // in parantezele patrate sunt scrise name de la inputurile din formular
+    $nume =         $_GET['nume'];
+    $prenume =      $_GET['prenume'];
+    $telefon =      $_GET['telefon'];
+    $datan =        $_GET['datan'];
+    $email =        $_GET['email'];
+    $cnp =          $_GET['cnp'];
+    $varsta =       $_GET['varsta'];
+    $casatorit =    $_GET['casatorit'];
+
+    $sql = "insert into angajati (nume, prenume, telefon, datan, email, cnp, varsta, casatorit) 
+    values ('$nume', '$prenume','$telefon', '$datan', '$email', '$cnp', '$varsta', '$casatorit')";
+
+    // introducerea efectiva in baza de date cu verificare
+    
+    if ($conn->query($sql) == TRUE) {
+
+        echo "Am introdus pe $nume";
+    } else {
+
+        echo "Eroare: ".$conn->error;
+    }
+}
+
+if(isset($_GET['delete'])) {
+
+    $id = $_GET['id'];
+
+    $sql = "delete from angajati where id='$id'";
+
+    $conn->query($sql);
+}
+
+?>
+
 <table border=1 width=100%>
     <tr>
         <th>ID</th>
@@ -22,6 +62,7 @@ $result = $conn->query($sql);
         <th>CNP</th>
         <th>Varsta</th>
         <th>Casatorit</th>
+        <th>DELETE</th>
     </tr>
 
 <?php
@@ -51,11 +92,13 @@ if($result->num_rows > 0) {
             echo "<td>$cnp</td>";
             echo "<td>$varsta</td>";
             
+            
             // conditie de transformare 0 sau 1 in da sau nu
             echo "<td>";
             echo ($casatorit)?"DA":"NU";
             echo "</td>";
 
+            echo "<td><a href ='?delete&id=$id'>Delete </a></td>";
 
           echo '</tr>';
 
@@ -67,12 +110,15 @@ if($result->num_rows > 0) {
 }
 
 ?>
+
 </table>
+
+<!-- ---------------------------------------------------------------------------------------------- -->
+
 <br>
 
-
-
-<form action ="index.php" method="get">
+<!-- orice input trebuie sa aiba un nume pt ca PHP-ul sa il poate recunoaste -->
+<form action ="index.php" method="GET">
 
     <table>
 
@@ -89,37 +135,37 @@ if($result->num_rows > 0) {
 
         <tr>
             <td>Telefon</td>
-            <td><input type="text"></td>
+            <td><input name="telefon" type="text"></td>
         </tr>
 
         <tr>
             <td>Data nasterii</td>
-            <td><input type="text"></td>
+            <td><input name="datan" type="text"></td>
         </tr>
 
         <tr>
             <td>Email</td>
-            <td><input type="text"></td>
+            <td><input name="email" type="text"></td>
         </tr>
 
         <tr>
             <td>CNP</td>
-            <td><input type="text"></td>
+            <td><input name="cnp" type="text"></td>
         </tr>
 
         <tr>
             <td>Varsta</td>
-            <td><input type="text"></td>
+            <td><input name="varsta" type="text"></td>
         </tr>
 
         <tr>
             <td>Casatorit</td>
-            <td><input type="text"></td>
+            <td><input name="casatorit" type="text"></td>
         </tr>
 
         <tr>
             <td></td>
-           <td> <input type="submit" value="Insereaza"></td>
+           <td> <input type="submit" name="inserare" value="Insereaza"></td>
         </tr>
 
 </form>
